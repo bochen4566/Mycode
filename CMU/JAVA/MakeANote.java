@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import NotePackage.*;
 
-// Driver for Lab8
+
 public class MakeANote {
 
     // Keyboard scanner for user input
@@ -17,7 +18,7 @@ public class MakeANote {
 
     // String values for the display sub-menu - title first
     private static final String[] displayMenu = {"Display Options", "Display all Notes",
-            "Display Note by Number", "Display Notes by Name", "Return to previous menu"};
+            "Display Note by Number", "Display Notes by Name","Sort by Name", "Sort by Number","Return to previous menu"};
 
     // getMenuChoice(String[] menu)
     //      Displays menu[]
@@ -34,7 +35,61 @@ public class MakeANote {
         choice = Integer.parseInt(keyboard.nextLine());
         return choice;
     }
+    private static void displayAllNotes(NoteCollection noteCollection) {
+        System.out.println("\n--- All Notes ---");
+        if (noteCollection.isEmpty()) {
+            System.out.println("No notes found.");
+        } else {
+            int noteNumber = 1;
+            for (Note note : noteCollection.getAllNotes()) {
+                System.out.println("Note " + noteNumber + ":\n" + note.toString());
+                noteNumber++;
+            }
+        }
+    }
+    private static void sortByName(NoteCollection noteCollection) {
+        noteCollection.sortByName();
+    }
+    private static void sortByNumber(NoteCollection noteCollection) {
+        noteCollection.sortByNumber();
+    }
+    private static void sortBySize(NoteCollection noteCollection) {
+        noteCollection.sortBySize();
+    }
 
+    // Display a note by number
+    private static void displayNoteByNumber(NoteCollection noteCollection) {
+        keyboard.nextLine(); // Clearing the newline character
+        System.out.print("Enter the note number: ");
+        int noteNumber = keyboard.nextInt();
+        keyboard.nextLine(); // Clearing the newline character
+
+        Note note = noteCollection.getNoteByNumber(noteNumber);
+        if (note != null) {
+            System.out.println("\n--- Note " + noteNumber + " ---\n" + note.toString());
+        } else {
+            System.out.println("Note not found. Please enter a valid note number.");
+        }
+    }
+
+    // Display notes by name
+    private static void displayNotesByName(NoteCollection noteCollection) {
+        keyboard.nextLine(); // Clearing the newline character
+        System.out.print("Enter the note name: ");
+        String noteName = keyboard.nextLine();
+
+        ArrayList<Note> matchingNotes = noteCollection.getNoteByName(noteName);
+        if (matchingNotes.isEmpty()) {
+            System.out.println("No notes found with the given name.");
+        } else {
+            System.out.println("\n--- Notes with name \"" + noteName + "\" ---");
+            int noteNumber = 1;
+            for (Note note : matchingNotes) {
+                System.out.println("Note " + noteNumber + ":\n" + note.toString());
+                noteNumber++;
+            }
+        }
+    }
     // main()
     //      Display the main menu, get a choice
     //      Create: get information for a new Memo
@@ -84,23 +139,48 @@ public class MakeANote {
                         switch (subchoice) {
                             // Create a Memo
                             case 1:
-                                // Your code here: create a Memo object and add
-                                // it to the Notecollection
-
+                                Memo memo = new Memo(name, body, from, to);
+                                // Add the Memo object to the NoteCollection
+                                noteCollection.add(memo);
+                                System.out.println("Memo created and added to NoteCollection.");
                                 break;
+
 
 
                             // Create a TimedMemo
                             // TBD in part 2
                             case 2:
-                                System.out.println("TBD");
-                                break;
-
+                                public static void createTimedMemo(NoteCollection noteCollection) {
+                                    keyboard.nextLine(); // Clearing the newline character
+                                    System.out.print("Enter Memo name: ");
+                                    name = keyboard.nextLine();
+                                    System.out.print("Enter Memo body: ");
+                                    body = keyboard.nextLine();
+                                    System.out.print("Enter who this is from: ");
+                                    from = keyboard.nextLine();
+                                    System.out.print("Enter who this is to: ");
+                                    to = keyboard.nextLine();
+                                    note = new TimedMemo(name, body, from, to);
+                                    noteCollection.add(note);
+                                    System.out.println("\nTimed Memo created successfully:\n" + note.toString());
+                            }
                             // Create a PoliteTimedMemo
                             // TBD in part 2
                             case 3:
-                                System.out.println("TBD");
-                                break;
+                                public static void createPoliteMemo(NoteCollection noteCollection) {
+                                    keyboard.nextLine(); // Clearing the newline character
+                                    System.out.print("Enter Memo name: ");
+                                    name = keyboard.nextLine();
+                                    System.out.print("Enter Memo body: ");
+                                    body = keyboard.nextLine();
+                                    System.out.print("Enter who this is from: ");
+                                    from = keyboard.nextLine();
+                                    System.out.print("Enter who this is to: ");
+                                    to = keyboard.nextLine();
+                                    note = new PoliteTimedMemo(name, body, from, to);
+                                    noteCollection.add(note);
+                                    System.out.println("\nPolite Memo created successfully:\n" + note.toString());
+                            }
 
                             // Quit
                             case 4:
@@ -120,24 +200,30 @@ public class MakeANote {
 
                             // Display all notes
                             case 1:
-                                // Your code here
-
-                                break;
+                                displayAllNotes(noteCollection);
 
                             // Display a note by number
                             case 2:
-                                System.out.println("TBD");
+                                displayNoteByNumber(noteCollection);
                                 // TBD in part 2
                                 break;
 
                             // Display a note by name
                             case 3:
-                                System.out.println("TBD");
+                                displayNotesByName(noteCollection);
                                 // TBD in part 2
                                 break;
-
-                            // Quit
                             case 4:
+                                sortByName(noteCollection);
+                                System.out.println("Notes sorted by name. Choose display all notes to see the sorted list.");
+                                break;
+                            case 5:
+                                sortByNumber(noteCollection);
+                                break;
+                            case 6:
+                                sortBySize(noteCollection);
+                                break;
+                            case 7:
                                 System.out.println("Returning to main menu");
                                 break;
                         }
